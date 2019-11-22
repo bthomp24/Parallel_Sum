@@ -18,9 +18,17 @@ long add_serial(const char *numbers) {
     return sum;
 }
 
-long add_parallel(const char *numbers) {
+long add_parallel(const char *numbers){
     long sum = 0;
-
+#pragma omp parallel num_threads(omp_get_max_threads())     // Sets number of threads to max
+    {
+        // Use parallel for loop with reduction to add up the numbers
+        // in the array and get the sum
+        #pragma omp for reduction(+: sum)
+            for (long i = 0; i < Num_To_Add; i++) {
+            sum += numbers[i];
+        }
+    }
     return sum;
 }
 
